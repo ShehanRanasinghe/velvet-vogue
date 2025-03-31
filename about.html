@@ -23,7 +23,7 @@
             <a href="cart.html">Cart</a>
             <a href="profile.html">Profile</a>
             <a href="about.html">About</a>
-            <a href="contact.html">Contact Us</a>
+            <a href="contact.php">Contact Us</a>
         </nav>
     </header>
 

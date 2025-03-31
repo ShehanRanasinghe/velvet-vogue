@@ -9,7 +9,7 @@
     <link rel="shortcut icon" type="image/png" href="assets/favicon.png">
 
     <!--CSS Style File-->
-    <link rel="stylesheet" href="css/products.css">
+    <link rel="stylesheet" href="css/contact.css">
     <link rel="stylesheet" href="css/nav.css">
     <link rel="stylesheet" href="css/footer.css">
 
@@ -27,15 +27,26 @@
         </nav>
     </header>
 
-  <!-- Product Section -->
-  <section class="products">
-        <h2>Our Collection</h2>
-        <?php
-            include('products_list.php');
-            displayProducts($products); // Call the function to display all products
-        ?>
+    <section class="contact">
+        <form action="send_email.php" method="POST" class="contact-left">
+            <div class="contact-left-title">
+                <h2>Get in Touch</h2>
+                <hr>
+            </div>
+            <input type="text" id="name" name="name" placeholder="Your Name" class="contact-inputs" required>
+            <input type="text" id="email" name="email" placeholder="Please Enter you E-Mail Address" class="contact-inputs" required>
+            <textarea id="message" name="message" placeholder="Your Message" class="contact-inputs" required></textarea>
+            <button type="submit" class="btnsubmit">Submit <img src="assets/arrow.png"></button>
+        </form>
+
+        <div class="contact-right">
+            <img src="assets/contact.png">
+        </div>
+
     </section>
-    
+
+
+
     <!-- Footer -->
     <footer>
         <p>&copy; 2025 Velvet Vogue | All Rights Reserved</p>
@@ -44,6 +55,6 @@
     </footer>
 
     <!--JavaScript File-->
-    <script src="js/app.js" defer></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
