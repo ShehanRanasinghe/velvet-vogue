@@ -1,0 +1,113 @@
+html {
+    scroll-behavior: smooth;
+}
+
+body, h1, h2, h3, h4, p, a {
+    margin: 0;
+    padding: 0;
+    font-family: Comic Sans Ms;
+}
+
+.banner {
+    background:url('../assets/VelvetVogue.jpg') no-repeat center center/cover;
+    text-align: center;
+    padding: 330px 20px;
+}
+
+.btn {
+    position: relative;
+    top:95px;
+    background-color: #8b006d;
+    padding: 10px 40px;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+}
+
+.btn:hover {
+    background-color: #ff006a;
+}
+
+/* Featured Products */
+.featured-products {
+    background-color: #77435b;
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.featured-products h2{
+    background-color: #858585a8;
+    font-size: 30px;
+    color: #ddd;
+    width: 100%;
+    padding:20px 0;
+    border-radius: 50px;
+
+    animation: appear linear;
+    animation-timeline: view();
+    animation-range: entry 0% cover 40%;
+}
+
+/* Promotions*/
+.promotions {
+    background-color: #dddbdb;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.promotion-card {
+    background-color: #ff0062;
+    color: white;
+    padding: 100px;
+    margin: 20px 0;
+    border-radius: 8px;
+}
+
+.promotion-card a {
+    background-color: white;
+    color: #ff0062;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    position: relative;
+    top: 20px;
+
+}
+
+.promotion-card a:hover {
+    background-color: #555;
+    color: white;
+}
+
+/* Certifications Section */
+.certifications {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.certifications-card {
+    animation: appear linear;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+
+    background-color: #eee;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@keyframes appear{
+    from {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0px);
+    }
+}
+
+
