@@ -43,7 +43,9 @@
             <a href="terms-of-service.html">Terms of Service</a>
     </footer>
 
-    <!--JavaScript File-->
+    <!-- General app.js -->
     <script src="js/app.js" defer></script>
+    <!-- Security.js for disabling right-click -->
+    <script src="js/security.js" defer></script>
 </body>
 </html>

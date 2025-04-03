@@ -5,6 +5,13 @@ use PHPMailer\PHPMailer\Exception;
 require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
+require 'phpDotEnv/vendor/autoload.php';
+
+use Dotenv\Dotenv;
+
+// Load the .env file
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $senderEmail = $_POST['email'];  // Get the email from the contact form
@@ -16,16 +23,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         //Server settings
         $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com'; //  SMTP provider is Gmail
+        $mail->Host = $_ENV['SMTP_HOST']; //  SMTP provider is Gmail
         $mail->SMTPAuth = true;
-        $mail->Username = 'your-email@example.com'; // My email address
-        $mail->Password = 'your-email-password'; //turn on 2 step verification and create app password to this Password
+        $mail->Username = $_ENV['SMTP_USERNAME']; // My email address  /
+        $mail->Password = $_ENV['SMTP_PASSWORD']; //turn on 2 step verification and create app password to this
+       
+
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+        $mail->Port = $_ENV['SMTP_PORT'];
 
         //Recipients
-        $mail->setFrom($senderEmail, $senderName);       // Sender's email and name
-        $mail->addAddress('your-email@example.com',); // The email address where I want to receive messages
+        $mail->setFrom($_ENV['SMTP_FROM_EMAIL'], $_ENV['SMTP_FROM_NAME']);      // Sender's email and name
+        $mail->addAddress($_ENV['RECIPIENT_EMAIL']); // The email address where I want to receive messages
 
         // Content
         $mail->isHTML(true);
