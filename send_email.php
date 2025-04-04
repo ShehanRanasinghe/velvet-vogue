@@ -5,7 +5,7 @@ use PHPMailer\PHPMailer\Exception;
 require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
-require 'phpDotEnv/vendor/autoload.php';
+require 'PHP.env/vendor/autoload.php';
 
 use Dotenv\Dotenv;
 
@@ -20,7 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $mail = new PHPMailer(true);
 
-    try {
+    try 
+    {
         //Server settings
         $mail->isSMTP();
         $mail->Host = $_ENV['SMTP_HOST']; //  SMTP provider is Gmail
@@ -28,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail->Username = $_ENV['SMTP_USERNAME']; // My email address  /
         $mail->Password = $_ENV['SMTP_PASSWORD']; //turn on 2 step verification and create app password to this
        
-
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = $_ENV['SMTP_PORT'];
 
@@ -42,9 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail->Body = "Name: $senderName<br>Email: $senderEmail<br>Message: $message";
 
         $mail->send();
-        echo 'Message has been sent successfully';
-    } catch (Exception $e) {
-        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        echo "<script>alert('Message has been sent successfully'); window.location.href = 'contact.php';</script>";
+    } 
+    catch (Exception $e) 
+    {
+        echo "<script>alert('Message could not be sent. Mailer Error: " . $mail->ErrorInfo . "'); window.location.href = 'contact.php';</script>";
     }
 }
 ?>

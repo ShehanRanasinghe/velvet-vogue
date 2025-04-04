@@ -21,7 +21,7 @@
             <a href="index.php">Home</a>
             <a href="products.php">Products</a>
             <a href="cart.html">Cart</a>
-            <a href="profile.html">Profile</a>
+            <a href="login.php">Profile</a>
             <a href="about.html">About</a>
             <a href="contact.php">Contact Us</a>
         </nav>
