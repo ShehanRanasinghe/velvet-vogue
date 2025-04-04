@@ -1,4 +1,12 @@
 <?php
+    require 'PHP.env/vendor/autoload.php';
+
+    use Dotenv\Dotenv;
+
+    // Load the .env file
+    $dotenv = Dotenv::createImmutable(__DIR__, 'velvetvogue.env');
+    $dotenv->load();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['verify_otp'])) {
     $otp = $_POST['otp'];
     $conn = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);

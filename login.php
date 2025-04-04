@@ -10,7 +10,7 @@
     use Dotenv\Dotenv;
     
     // Load the .env file
-    $dotenv = Dotenv::createImmutable(__DIR__);
+    $dotenv = Dotenv::createImmutable(__DIR__, 'velvetvogue.env');
     $dotenv->load();
 
 ///////////////////////////////////////////Register//////////////////////////////////////////
