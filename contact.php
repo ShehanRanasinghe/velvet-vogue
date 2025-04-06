@@ -1,3 +1,57 @@
+<?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+require 'PHP.env/vendor/autoload.php';
+
+use Dotenv\Dotenv;
+
+// Load the .env file
+$dotenv = Dotenv::createImmutable(__DIR__, 'velvetvogue.env');
+$dotenv->load();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Send'])){
+    $senderEmail = $_POST['email'];  // Get the email from the contact form
+    $senderName = $_POST['name'];    // Get the name from the contact form
+    $message = $_POST['message'];    // Get the message from the contact form
+
+    $mail = new PHPMailer(true);
+
+    try 
+    {
+        //Server settings
+        $mail->isSMTP();
+        $mail->Host = $_ENV['SMTP_HOST']; //  SMTP provider is Gmail
+        $mail->SMTPAuth = true;
+        $mail->Username = $_ENV['SMTP_USERNAME']; // My email address
+        $mail->Password = $_ENV['SMTP_PASSWORD']; //turn on 2 step verification and create app password to this
+       
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = $_ENV['SMTP_PORT'];
+
+        //Recipients
+        $mail->setFrom($_ENV['SMTP_FROM_EMAIL'], $_ENV['SMTP_FROM_NAME']);      // Sender's email and name
+        $mail->addAddress($_ENV['RECIPIENT_EMAIL']); // The email address where I want to receive messages
+
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = 'New Contact Message from Velvet Vogue'; //Email Subject
+        $mail->Body = "Name: $senderName<br>Email: $senderEmail<br>Message: $message"; //Email body
+
+        $mail->send();
+        echo "<script>alert('Message has been sent successfully'); window.location.href = 'contact.php';</script>";
+    } 
+    catch (Exception $e) 
+    {
+        echo "<script>alert('Message could not be sent. Mailer Error: " . $mail->ErrorInfo . "'); window.location.href = 'contact.php';</script>";
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +82,7 @@
     </header>
 
     <section class="contact">
-        <form action="send_email.php" method="POST" class="contact-left">
+        <form action="contact.php" method="POST" class="contact-left">
             <div class="contact-left-title">
                 <h2>Get in Touch</h2>
                 <hr>
@@ -36,7 +90,7 @@
             <input type="text" id="name" name="name" placeholder="Your Name" class="contact-inputs" required>
             <input type="text" id="email" name="email" placeholder="Please Enter you E-Mail Address" class="contact-inputs" required>
             <textarea id="message" name="message" placeholder="Your Message" class="contact-inputs" required></textarea>
-            <button type="submit" class="btnsubmit">Submit <img src="assets/arrow.png"></button>
+            <button type="submit" name="Send" class="btnsubmit">Submit <img src="assets/arrow.png"></button>
         </form>
 
         <div class="contact-right">

@@ -9,26 +9,29 @@
 
     use Dotenv\Dotenv;
     
-    // Load the .env file
+    // Load the velvetvogue.env file
     $dotenv = Dotenv::createImmutable(__DIR__, 'velvetvogue.env');
     $dotenv->load();
 
 ///////////////////////////////////////////Register//////////////////////////////////////////
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Register'])) {
-    $username = $_POST['txtUserName'];
-    $email = $_POST['txtRegEmail'];
-    $password = $_POST['txtRegPW'];
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Register'])) //Register button name
+{
+    $username = $_POST['txtUserName']; //UserName in Register 
+    $email = $_POST['txtRegEmail'];    //Email in Register 
+    $password = $_POST['txtRegPW'];   //Paasword in Register 
 
-    // Hash the password
+    // Hash the password for secure store in Database
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // Generate OTP and OTP expiry
+    // Generate OTP and OTP Expiry Time 
     $otp = rand(100000, 999999);
     $otp_expiry = date("Y-m-d H:i:s", strtotime("+15 minutes"));
 
-    // Save user details in the database
+    //Database details and connection create
     $conn = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);
-    if ($conn->connect_error) {
+    if ($conn->connect_error) 
+    {
         die("Connection failed: " . $conn->connect_error);
     }
 
@@ -38,42 +41,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Register'])) {
     $stmt->close();
     $conn->close();
 
-    // Send OTP via email using PHPMailer
-
+    // Send OTP to Register Email using PHPMailer
     $mail = new PHPMailer(true);
     try {
-        $mail->isSMTP();
-        $mail->Host = $_ENV['SMTP_HOST'];
-        $mail->SMTPAuth = true;
-        $mail->Username = $_ENV['SMTP_USERNAME'];  // Your email
-        $mail->Password = $_ENV['SMTP_PASSWORD']; // Your email password
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = $_ENV['SMTP_PORT'];
-        $mail->setFrom($_ENV['SMTP_FROM_EMAIL'], $_ENV['SMTP_FROM_NAME']);  
-        $mail->addAddress($email);
-        $mail->Subject = 'OTP for Velvet Vogue Registration';
-        $mail->Body    = "Your OTP code is: $otp";
-        $mail->send();
+            $mail->isSMTP();
+            $mail->Host = $_ENV['SMTP_HOST'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $_ENV['SMTP_USERNAME'];  // My Email Address
+            $mail->Password = $_ENV['SMTP_PASSWORD'];  //Turn on 2 step verification and create app password to this
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = $_ENV['SMTP_PORT'];
+            $mail->setFrom($_ENV['SMTP_FROM_EMAIL'], $_ENV['SMTP_FROM_NAME']);  
+            $mail->addAddress($email);
+            $mail->Subject = 'OTP for Velvet Vogue Registration'; //Email Subject
+            $mail->Body    = "Your OTP code is: $otp"; //Email body
+            $mail->send();
 
-        // Redirect to OTP verification page
-        header('Location: verification.php');
-        exit;
-    } catch (Exception $e) {
-        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-    }
+            // Redirect to OTP verification page
+            header('Location: verification.php');
+            exit;
+        } 
+        catch (Exception $e) 
+        {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
 }
 
 ///////////////////////////////////////////Login///////////////////////////////////////////
 session_start();  // Start a session to track user login status
 
 // Check if the form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) {
-    $email = $_POST['txtEmail'];
-    $password = $_POST['txtPW'];
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login button name
+{
+    $email = $_POST['txtEmail']; //Login Email Address
+    $password = $_POST['txtPW']; //Login Password
 
-    // Connect to the database
+    //Database details and connection create
     $conn = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);
-    if ($conn->connect_error) {
+    if ($conn->connect_error) 
+    {
         die("Connection failed: " . $conn->connect_error);
     }
 
@@ -85,8 +91,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) {
     $user = $result->fetch_assoc();
 
     // Check if user exists and if the password matches
-    if ($user && password_verify($password, $user['password'])) {
-        if ($user['otp_verified'] == 1) {  // Check if OTP is verified
+    if ($user && password_verify($password, $user['password'])) 
+    {
+        if ($user['otp_verified'] == 1) 
+        {  
+            // Check if OTP is verified
             // Set session variables for the user
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
@@ -95,10 +104,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) {
             // Redirect to dashboard
             header("Location: dashboard.php");
             exit();
-        } else {
+        } 
+        else 
+        {
             echo "Please verify your OTP first.";
         }
-    } else {
+    } 
+    else 
+    {
         echo "Invalid email or password.";
     }
 
@@ -107,6 +120,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) {
     $conn->close();
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
