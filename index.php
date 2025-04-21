@@ -1,3 +1,8 @@
+<?php
+session_start();
+$isLoggedIn = isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSION['email']);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,9 +25,16 @@
         <nav>
             <a href="index.php">Home</a>
             <a href="products.php">Products</a>
-            <a href="cart.html">Cart</a>
-            <a href="login.php">Profile</a>
-            <a href="about.html">About</a>
+            <a href="cart.php">Cart</a>
+            
+            <!--Check User Logged In Or Not || If user login in redirect to dashboard.php If not redirect to default login.php-->
+            <?php if ($isLoggedIn): ?>
+                <a href="dashboard.php">Profile</a>
+            <?php else: ?>
+                <a href="login.php">Profile</a>
+            <?php endif; ?>
+                
+            <a href="about.php">About</a>
             <a href="contact.php">Contact Us</a>
         </nav>
     </header>

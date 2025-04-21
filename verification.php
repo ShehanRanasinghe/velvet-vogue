@@ -15,18 +15,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['verify_otp'])) {
     }
 
     // Check OTP against the database
-    $stmt = $conn->prepare("SELECT * FROM users WHERE otp = ? AND otp_expiry > NOW()");
-    $stmt->bind_param("s", $otp);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $statement = $conn->prepare("SELECT * FROM users WHERE otp = ? AND otp_expiry > NOW()");
+    $statement->bind_param("s", $otp);
+    $statement->execute();
+    $result = $statement->get_result();
     if ($result->num_rows > 0) {
         // OTP is correct, set the user session
         session_start();
         $_SESSION['logged_in'] = true;
 
                 // Update otp_verified to 1 (to indicate OTP has been verified)
-                $update_stmt = $conn->prepare("UPDATE users SET otp_verified = 1 WHERE otp = ?");
-                $update_stmt->bind_param("s", $otp);
+                $update_stmt = $conn->prepare("UPDATE users SET otp_verified = 1 WHERE otp = ?"); //Use "?" this mark to secure user data
+                $update_stmt->bind_param("s", $otp); //Bind the right email value to the placeholder    //'s' means String Data type
                 $update_stmt->execute();
                 $update_stmt->close();
 
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['verify_otp'])) {
     } else {
         echo "<script>alert('Invalid or Expired OTP'); window.location.href = 'verification.php';</script>";
     }
-    $stmt->close();
+    $statement->close();
     $conn->close();
 }
 ?>

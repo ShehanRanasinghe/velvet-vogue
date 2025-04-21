@@ -49,6 +49,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Send'])){
         echo "<script>alert('Message could not be sent. Mailer Error: " . $mail->ErrorInfo . "'); window.location.href = 'contact.php';</script>";
     }
 }
+
+session_start();
+$isLoggedIn = isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSION['email']);
+
 ?>
 
 
@@ -74,8 +78,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Send'])){
         <nav>
             <a href="index.php">Home</a>
             <a href="products.php">Products</a>
-            <a href="cart.html">Cart</a>
-            <a href="login.php">Profile</a>
+            <a href="cart.php">Cart</a>
+            <!--Check User Logged In Or Not || If user login in redirect to dashboard.php If not redirect to default login.php-->
+            <?php if ($isLoggedIn): ?>
+                <a href="dashboard.php">Profile</a>
+            <?php else: ?>
+                <a href="login.php">Profile</a>
+            <?php endif; ?>
             <a href="about.html">About</a>
             <a href="contact.php">Contact Us</a>
         </nav>

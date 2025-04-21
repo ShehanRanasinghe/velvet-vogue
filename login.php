@@ -35,10 +35,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Register'])) //Registe
         die("Connection failed: " . $conn->connect_error);
     }
 
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password, otp, otp_expiry) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $username, $email, $hashed_password, $otp, $otp_expiry);
-    $stmt->execute();
-    $stmt->close();
+    $statement = $conn->prepare("INSERT INTO users (username, email, password, otp, otp_expiry) VALUES (?, ?, ?, ?, ?)"); //Use "?" this mark to secure user data
+    $statement->bind_param("sssss", $username, $email, $hashed_password, $otp, $otp_expiry); //Bind the right email value to the placeholder    //'s' means String Data type
+    $statement->execute();
+    $statement->close();
     $conn->close();
 
     // Send OTP to Register Email using PHPMailer
@@ -53,8 +53,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Register'])) //Registe
             $mail->Port = $_ENV['SMTP_PORT'];
             $mail->setFrom($_ENV['SMTP_FROM_EMAIL'], $_ENV['SMTP_FROM_NAME']);  
             $mail->addAddress($email);
-            $mail->Subject = 'OTP for Velvet Vogue Registration'; //Email Subject
-            $mail->Body    = "Your OTP code is: $otp"; //Email body
+            $mail->Subject = 'Velvet Vogue Registration'; //Email Subject
+            $mail->Body    = "Your Velvet Vogue Registration OTP code is: $otp"; //Email body
             $mail->send();
 
             // Redirect to OTP verification page
@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Register'])) //Registe
         } 
         catch (Exception $e) 
         {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            echo "<script>alert('Message could not be sent. Mailer Error: " . $mail->ErrorInfo . "'); window.location.href = 'login.php';</script>";
         }
 }
 
@@ -75,6 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login but
 {
     $email = $_POST['txtEmail']; //Login Email Address
     $password = $_POST['txtPW']; //Login Password
+    $remember = isset($_POST['remember']); //Check Remember Me box is checked by user
 
     //Database details and connection create
     $conn = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);
@@ -84,10 +85,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login but
     }
 
     // Query the user based on email
-    $stmt = $conn->prepare("SELECT id, username, email, password, otp_verified FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $statement = $conn->prepare("SELECT id, username, email, password, otp_verified FROM users WHERE email = ?"); //Use "?" this mark to secure user data
+    $statement->bind_param("s", $email); //Bind the right email value to the placeholder    //'s' means String type becuase the email data type is String
+    $statement->execute();
+    $result = $statement->get_result();
     $user = $result->fetch_assoc();
 
     // Check if user exists and if the password matches
@@ -100,6 +101,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login but
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['email'] = $user['email'];
+            
+            //If Remember Me box checked set cookie for 7 days
+            if ($remember) {
+                setcookie('RMe_email', $email, time() + (7 * 24 * 60 * 60), "/");
+            } else {
+                setcookie('RMe_email', '', time() - 3600, "/"); //If Remember Box unchecked the cookie is delete
+            }
 
             // Redirect to dashboard
             header("Location: dashboard.php");
@@ -107,16 +115,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login but
         } 
         else 
         {
-            echo "Please verify your OTP first.";
+            echo "<script>alert('Please Verify Your OTP Code First.'); window.location.href = 'login.php';</script>";
         }
     } 
     else 
     {
-        echo "Invalid email or password.";
+        echo "<script>alert('Invalid E-Mail or Password. Please check your credentials again'); window.location.href = 'login.php';</script>";
     }
 
     // Close the database connection
-    $stmt->close();
+    $statement->close();
     $conn->close();
 }
 ?>
@@ -124,6 +132,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login but
 
 <!DOCTYPE html>
 <html lang="en">
+
+<?php
+$RememberedMe_email = isset($_COOKIE['RMe_email']) ? $_COOKIE['RMe_email'] : '';
+?>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -139,14 +152,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login but
 
 </head>
 <body>
+
+<!--Check the user redirected from a restricted page-->
+<?php
+if (isset($_GET['message']) && $_GET['message'] == 'login_required') {
+    echo "<script>alert('Please Log in to access This Page.');</script>";
+}
+?>
+
     <!--Navigation Bar-->
     <header>
         <nav>
             <a href="index.php">Home</a>
             <a href="products.php">Products</a>
-            <a href="cart.html">Cart</a>
+            <a href="cart.php">Cart</a>
             <a href="login.php">Profile</a>
-            <a href="about.html">About</a>
+            <a href="about.php">About</a>
             <a href="contact.php">Contact Us</a>
         </nav>
     </header>
@@ -160,7 +181,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login but
 
                     <div class="input-box">
                     <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                    <input type="email" name="txtEmail" required>
+                    <input type="email" name="txtEmail" required value="<?php echo htmlspecialchars($RememberedMe_email); ?>">
                     <label>Email</label>
                     </div>
 
@@ -171,8 +192,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login but
                     </div>
 
                     <div class="remember-forgot">
-                    <label><input type="checkbox">Remember me</label>
-                    <a href="#">Forgot Password?</a>
+                    <label><input type="checkbox" name="remember">Remember Me</label>
+                    <a href="javascript:void(0);" onclick="resetPassword()">Forgot Password?</a>
                     </div>
 
                     <button type="submit" class="btns" name="Login">Login</button>
@@ -207,10 +228,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login but
                     </div>
 
                     <div class="remember-forgot">
-                    <label><input type="checkbox">I agree to the terms & conditions</label>
+                    <label for="Terms"><input type="checkbox" id="Terms">I agree to the terms & conditions</label>
                     </div>
 
-                    <button type="submit" class="btns" name="Register">Register</button>
+                    <button type="submit" class="btns" name="Register" id="RegBtn" disabled>Register</button>
 
                     <div class="login-register">
                     <p>Already have an account? <a href="#" class="login-link">Login</a></p>
@@ -235,6 +256,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login but
 
     <!-- General app.js -->
     <script src="js/app.js" defer></script>
+    <!--Reset Password-->
+    <script src="js/reset_password.js" defer></script>
     <!-- To work some functions login.js -->
     <script src="js/login.js"></script>
     <!-- Security.js for disabling right-click -->

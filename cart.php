@@ -1,19 +1,20 @@
 <?php
-session_start();
+session_start(); // Start the session
 $isLoggedIn = isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSION['email']);
 
-// Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    // If not logged in, redirect to the login page
-    header("Location: login.php");
+// Check All 3 varibaled are set //These varibales get by login.php
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['username']) || !isset($_SESSION['email'])) {
+
+    //If any of these 3 session varibaled are not set then redirect to the login.php
+    header("Location: login.php?message=login_required");
     exit();
 }
 
-echo "Welcome, " . $_SESSION['username'] . "!";
+//All session are set then continue with the cart.php
+$user_id = $_SESSION['user_id'];
+$username = $_SESSION['username'];
+$email = $_SESSION['email'];
 ?>
-
-<!-- Your dashboard content goes here -->
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +27,7 @@ echo "Welcome, " . $_SESSION['username'] . "!";
     <link rel="shortcut icon" type="image/png" href="assets/favicon.png">
 
     <!--CSS Style File-->
-    <link rel="stylesheet" href="css/contact.css">
+    <link rel="stylesheet" href="css/cart.css">
     <link rel="stylesheet" href="css/nav.css">
     <link rel="stylesheet" href="css/footer.css">
 
@@ -49,8 +50,12 @@ echo "Welcome, " . $_SESSION['username'] . "!";
         </nav>
     </header>
 
-<h1>Hello</h1>
+  <!-- Product Section -->
+  <section class="products">
+        <h2>Our Collection</h2>
 
+    </section>
+    
     <!-- Footer -->
     <footer>
         <p>&copy; 2025 Velvet Vogue | All Rights Reserved</p>
