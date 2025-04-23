@@ -85,7 +85,7 @@ $isLoggedIn = isset($_SESSION['user_id']) && isset($_SESSION['username']) && iss
             <?php else: ?>
                 <a href="login.php">Profile</a>
             <?php endif; ?>
-            <a href="about.html">About</a>
+            <a href="about.php">About</a>
             <a href="contact.php">Contact Us</a>
         </nav>
     </header>

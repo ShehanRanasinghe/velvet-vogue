@@ -1,11 +1,195 @@
-html {
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html 
+{
     scroll-behavior: smooth;
 }
 
-body, h1, h2, h3, h4, p, a {
-    margin: 0;
-    padding: 0;
+body
+{
     font-family: Comic Sans Ms;
+    background-color: #77435b;
+}
+
+.cart 
+{ 
+    max-width: 900px; 
+    margin: 100px auto;
+    padding: 20px; 
+    border: 1px solid #ccc; 
+    border-radius: 12px; 
+    box-shadow: 0 0 10px rgba(0,0,0,1.0); 
+    backdrop-filter: blur(10px);
+}
+
+.cart h2
+{
+    background-color: #858585a8;
+    text-align: center;
+    font-size: 30px;
+    color: #ddd;
+    width: 100%;
+    padding:20px 0;
+    border-radius: 50px;
+}
+
+.msg
+{
+    background-color: #ff0000a8;
+    text-align: center;
+    font-size: 20px;
+    color: #ddd;
+    width: 100%;
+    margin-top: 50px;
+    padding:20px 0;
+    border-radius: 10px; 
+}
+
+.items 
+{ 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 15px; 
+    border-bottom: 1px solid #eee; 
+}
+
+.items img 
+{ 
+    width: 100px; 
+    border-radius: 8px; 
+}
+
+.cart h4
+{
+    text-align: center;
+    color: #ddd;
+    width: 30%;
+    padding:20px 0;
+}
+
+.Quantity-UP
+{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.uptxtbox
+{
+    text-align: center;
+    background-color: transparent;
+    font-size: 18px;      
+    padding: 8px 5px;     
+    border: 2px solid #ddd; 
+    border-radius: 8px;     
+    color: #ddd;
+    width: 50px;
+}
+.uptxtbox::-webkit-inner-spin-button,
+.uptxtbox::-webkit-outer-spin-button 
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.upbtn
+{
+    text-align: center;
+    background-color: #991e57;
+    font-size: 18px;      
+    padding: 10px 15px;     
+    border: none; 
+    border-radius: 8px;     
+    color: #ddd;
+    cursor: pointer;
+}
+
+.items p
+{
+    text-align: center;
+    font-size: 16px;      
+    padding: 10px 5px;         
+    color: #ddd;
+}
+
+.price-quantity p
+{
+    padding: 10px 20px ;
+    white-space: nowrap;
+    margin: 20px;
+    font-weight: bold;           
+    color: #ddd;
+    border: 2px solid #f00070;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); 
+    backdrop-filter: blur(10px);
+
+}
+
+.RVbtn
+{ 
+    background: crimson; color: white; 
+    text-decoration: none;
+    padding: 8px 14px; 
+    border: none; 
+    border-radius: 6px; 
+    cursor: pointer;
+}
+
+.CheckOut
+{ 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 20px 30px;
+    margin: 20px -10px 5px auto;
+    text-align: right; 
+    width: fit-content;
+    background: #77435b;
+    color: white; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    border-radius: 10px;  
+}
+
+.CheckOut p {
+    margin: 8px 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    min-width: 250px;
+}
+
+.label {
+    flex-basis: 50%; 
+    text-align: left;
+}
+
+.value {
+    flex-basis: 50%;
+    text-align: right;
+}
+
+.ChKbtn
+{ 
+    background-color: #630101;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.ChKbtn:hover {
+    background-color: #9e0332;
 }
 
 
