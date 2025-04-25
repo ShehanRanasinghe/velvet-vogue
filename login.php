@@ -37,7 +37,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Register'])) //Registe
 
     $statement = $conn->prepare("INSERT INTO users (username, email, password, otp, otp_expiry) VALUES (?, ?, ?, ?, ?)"); //Use "?" this mark to secure user data
     $statement->bind_param("sssss", $username, $email, $hashed_password, $otp, $otp_expiry); //Bind the right email value to the placeholder    //'s' means String Data type
-    $statement->execute();
+   
+
+    //To get user_id into user_detail table automatically
+    if($statement->execute())
+    {
+        $user_id = $conn->insert_id; //returns the ID of the last row inserted into a table with an AUTO_INCREMENT
+
+        $sql_user_details="INSERT INTO user_details (user_id) VALUES (?)";
+        $statement_user_details = $conn->prepare($sql_user_details);
+        $statement_user_details->bind_param("i", $user_id);
+        $statement_user_details->execute();
+    }
+
     $statement->close();
     $conn->close();
 

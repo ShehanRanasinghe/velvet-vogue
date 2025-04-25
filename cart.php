@@ -149,7 +149,7 @@ $totalPrice = 0;
                 <span class="value">LKR <?= number_format($totalPrice, 2) ?></span>
             </p>
 
-            <button class="ChKbtn">CheckOut</button>
+            <button class="ChKbtn" onclick="PopUpCheckOut()">CheckOut</button>
         </section>
 
             <?php else: //Cart is empty shows the below message?>
@@ -167,6 +167,8 @@ $totalPrice = 0;
 
     <!-- General app.js -->
     <script src="js/app.js" defer></script>
+    <!--checkout.php Pop-Up Option-->
+    <script src="js/cart.js" defer></script>
     <!-- Security.js for disabling right-click -->
     <script src="js/security.js" defer></script>
 </body>

@@ -66,6 +66,6 @@
 </div>
 
 <!--Add to Cart Function-->
-<script src="js/cart.js"></script>
+<script src="js/addtocart.js"></script>
 </body>
 </html>
