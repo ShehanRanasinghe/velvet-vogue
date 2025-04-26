@@ -29,7 +29,11 @@ $isLoggedIn = isset($_SESSION['user_id']) && isset($_SESSION['username']) && iss
             
             <!--Check User Logged In Or Not || If user login in redirect to dashboard.php If not redirect to default login.php-->
             <?php if ($isLoggedIn): ?>
+            <?php if ($_SESSION['role'] == 'admin'): ?>
                 <a href="dashboard.php">Profile</a>
+            <?php else: ?>
+                <a href="user_dashboard.php">Profile</a>
+            <?php endif; ?>
             <?php else: ?>
                 <a href="login.php">Profile</a>
             <?php endif; ?>

@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login but
     }
 
     // Query the user based on email
-    $statement = $conn->prepare("SELECT id, username, email, password, otp_verified FROM users WHERE email = ?"); //Use "?" this mark to secure user data
+    $statement = $conn->prepare("SELECT id, username, email, password, otp_verified, role FROM users WHERE email = ?"); //Use "?" this mark to secure user data
     $statement->bind_param("s", $email); //Bind the right email value to the placeholder    //'s' means String type becuase the email data type is String
     $statement->execute();
     $result = $statement->get_result();
@@ -113,6 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login but
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['email'] = $user['email'];
+            $_SESSION['role'] = $user['role'];
             
             //If Remember Me box checked set cookie for 7 days
             if ($remember) {
@@ -120,9 +121,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Login'])) // Login but
             } else {
                 setcookie('RMe_email', '', time() - 3600, "/"); //If Remember Box unchecked the cookie is delete
             }
-
-            // Redirect to dashboard
-            header("Location: dashboard.php");
+            
+            if ($user['role'] == 'admin') {
+                header("Location: dashboard.php");
+            } else {
+                header("Location: user_dashboard.php");
+            }
             exit();
         } 
         else 
