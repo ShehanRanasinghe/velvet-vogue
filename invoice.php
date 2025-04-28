@@ -1,19 +1,38 @@
 <?php
+    require 'PHP.env/vendor/autoload.php';
+
+    use Dotenv\Dotenv;
+
+    // Load the .env file
+    $dotenv = Dotenv::createImmutable(__DIR__, 'velvetvogue.env');
+    $dotenv->load();
+
+    // Database Connection
+    $conn = new mysqli($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASS'], $_ENV['DB_NAME']);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+session_start();
+
+
+
+///////////////////////////Get this code and customize by PayPal Site///////////////////////////////////
 // Enable error reporting
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Replace with your sandbox client ID and secret from https://developer.paypal.com
+// PayPal sandbox client ID and secret
 $clientId = 'AVqrnjn93QHg9K68BYfVd-6aRuL7UXYe_uNekMPrNFHBCYMTxDUWSqsP20tHUq0Wp_Zt01ALirvyuenb';
 $secret = 'EB7zxqymAHkgWfBJIv4D4Xz4V8q2RyZ_aaSxikQJ5KrZEChMhQMtx_XTwJ9R-3CSJ-yUHKBIiWwy_hnB';
 
-// Get the order ID from the PayPal redirect
+// Get the order ID from the PayPal redirect as InvoiceID
 if (!isset($_GET['order_id'])) {
     die("Order ID not provided.");
 }
 $orderID = $_GET['order_id'];
 
-// Step 1: Get access token from PayPal
+// Get access token from PayPal
 $tokenUrl = "https://api-m.sandbox.paypal.com/v1/oauth2/token";
 
 $ch = curl_init();
@@ -54,16 +73,41 @@ if (!$response) {
     die("Error fetching order details: " . curl_error($ch));
 }
 curl_close($ch);
-
 $orderData = json_decode($response, true);
 
-// Step 3: Parse order data
+$orderItems = [];
+
+//Parse order data
 $payerName = $orderData['payer']['name']['given_name'] . ' ' . $orderData['payer']['name']['surname'];
 $payerEmail = $orderData['payer']['email_address'];
 $amount = $orderData['purchase_units'][0]['amount']['value'];
 $currency = $orderData['purchase_units'][0]['amount']['currency_code'];
 $invoiceId = $orderData['id'];
 $status = $orderData['status'];
+///////////////////////////End of the by PayPal Site Code///////////////////////////////////
+
+
+//GET user id in Session to track who logged in
+$userId = $_SESSION['user_id'] ?? null;
+//Generate a OrderID
+$orderId = uniqid('order_');
+// Insert Data Automatically to order_details(table) in the database
+    $statement = $conn->prepare("INSERT INTO orders_details (order_id, user_id, invoice_id, amount, payment_status, paid_at) VALUES (?, ?, ?, ?, ?, ?)");
+    $statement->bind_param("sisdss", $orderId, $userId, $invoiceId, $amount, $status, $paidAt);
+    $paidAt = date('Y-m-d H:i:s');
+    $statement->execute();
+    
+// Insert Data Automatically to order_items(table) in the database
+    $cart_items = $_SESSION['cart'];
+    foreach ($cart_items as $item) 
+    {
+        $product_id = $item['id'];
+        $quantity = $item['quantity'];
+        $price = $item['price'];
+    }
+    $statement2 = $conn->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
+    $statement2->bind_param("siid", $orderId, $product_id, $quantity, $price);
+    $statement2->execute();
 ?>
 
 <!DOCTYPE html>

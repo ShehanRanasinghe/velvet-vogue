@@ -72,7 +72,7 @@ $itemsQuery = "SELECT * FROM products";
 $itemsResult = $conn->query($itemsQuery);
 
 //Get Order Details Table
-$orderDetailsQuery = "SELECT * FROM orders_details";
+$orderDetailsQuery = "SELECT * FROM orders_details ORDER BY paid_at DESC";
 $orderDetailsResult = $conn->query($orderDetailsQuery);
 ?>
 
@@ -252,7 +252,7 @@ $orderDetailsResult = $conn->query($orderDetailsQuery);
                             <td><?= htmlspecialchars($user['created_at']) ?></td>
                             <td><?= htmlspecialchars($user['updated_at']) ?></td>
                             <td class="buttons">
-                                <button class="editBtn" 
+                                <button class="editUserBtn" 
                                         data-type="User"
                                         data-id="<?= $user['id'] ?>"
                                         data-username="<?= htmlspecialchars($user['username']) ?>"
@@ -304,7 +304,7 @@ $orderDetailsResult = $conn->query($orderDetailsQuery);
                         <td><?= htmlspecialchars($item['created_at']) ?></td>
                         <td><?= htmlspecialchars($item['updated_at']) ?></td>
                         <td class="buttons">
-                                <button class="editBtn" 
+                                <button class="editItemBtn" 
                                         data-type="Item"
                                         data-id="<?= $item['id'] ?>"
                                         data-name="<?= htmlspecialchars($item['product_name']) ?>"
@@ -361,48 +361,183 @@ $orderDetailsResult = $conn->query($orderDetailsQuery);
 <?php } else ?>
 
 
-<!-- Edit User Modal -->
-<div id="UserModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#fff; padding:20px; border:1px solid #ccc; z-index:1000;">
-    <h2>Edit User</h2>
+<!--User Pop-Up Window-->
+<div id="UserModal" 
+    style=
+            "display:none; 
+            position:fixed; 
+            top:50%; 
+            left:50%; 
+            transform:translate(-50%, -50%); 
+            background:#fff; 
+            padding:20px; 
+            border:1px solid #ccc; 
+            z-index:1000;
+            border-radius: 10px;
+            width:360px;
+            height:450px;"
+>
+    <h2 style="text-align: center; padding:20px">Edit User</h2>
     <form class="editForm" id="editUserForm" data-type="User">
         <input type="hidden" id="editUserId" name="id">
 
         <label>Username:</label><br>
-        <input type="text" id="editUsername" name="username" required><br><br>
+        <input type="text" id="editUsername" name="username" required 
+        style=
+                "width: 100%;
+                margin-top:10px;
+                padding: 12px 16px;
+                border: none;
+                border-radius: 12px; /* rounded corners */
+                background-color: #f5f5f5; /* subtle background */
+                box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+                font-size: 16px;
+                transition: all 0.3s ease;
+                outline: none;"
+        ><br><br>
 
         <label>Email:</label><br>
-        <input type="email" id="editEmail" name="email" required><br><br>
+        <input type="email" id="editEmail" name="email" required
+        style=
+                "width: 100%;
+                margin-top:10px;
+                padding: 12px 16px;
+                border: none;
+                border-radius: 12px; /* rounded corners */
+                background-color: #f5f5f5; /* subtle background */
+                box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+                font-size: 16px;
+                transition: all 0.3s ease;
+                outline: none;"
+        ><br><br>
 
         <label>Role:</label><br>
-        <select id="editRole" name="role" required>
+        <select id="editRole" name="role" required
+        style=
+                "width: 40%;
+                margin-top:10px;
+                padding: 12px 16px;
+                border: none;
+                border-radius: 12px; /* rounded corners */
+                background-color: #f5f5f5; /* subtle background */
+                box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+                font-size: 16px;
+                transition: all 0.3s ease;
+                outline: none;"
+        >
             <option value="user">User</option>
             <option value="admin">Admin</option>
         </select><br><br>
 
-        <button type="submit">Save Changes</button>
-        <button type="button" onclick="closeModal('User')">Cancel</button>
+        <button type="submit"
+        style=
+                "background-color: crimson;
+                color: white;
+                border: none;
+                margin-right: 20px;
+                padding: 10px 18px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1rem;"
+        >Save Changes</button>
+        <button type="button" onclick="closeModal('User')"
+        style=
+                "background-color: #f00070;
+                color: white;
+                border: none;
+                padding: 10px 50px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1rem;"
+        >Cancel</button>
     </form>
 </div>
 
-<!-- Simple Background Overlay (optional for nice effect) -->
-<div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; opacity:0.5; z-index:999;"></div>
-
-<!-- Edit Item Modal -->
-<div id="ItemModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#fff; padding:20px; border:1px solid #ccc; z-index:1000;">
-    <h2>Edit Item</h2>
+<!--Item Pop-Up Window-->
+<div id="ItemModal"
+style=
+            "display:none; 
+            position:fixed; 
+            top:50%; 
+            left:50%; 
+            transform:translate(-50%, -50%); 
+            background:#fff; 
+            padding:20px; 
+            border:1px solid #ccc; 
+            z-index:1000;
+            border-radius: 10px;
+            width:360px;
+            height:400px;"
+>
+    <h2 style="text-align: center; padding:20px">Edit Item</h2>
     <form class="editForm" id="editItemForm" data-type="Item">
         <input type="hidden" id="editItemId" name="id">
 
         <label>Item Name:</label><br>
-        <input type="text" id="editItemName" name="product_name" required><br><br>
+        <input type="text" id="editItemName" name="product_name" required
+        style=
+                "width: 100%;
+                margin-top:10px;
+                padding: 12px 16px;
+                border: none;
+                border-radius: 12px; /* rounded corners */
+                background-color: #f5f5f5; /* subtle background */
+                box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+                font-size: 16px;
+                transition: all 0.3s ease;
+                outline: none;"
+        ><br><br>
 
         <label>Price:</label><br>
-        <input type="number" id="editItemPrice" name="product_price" step="0.01" required><br><br>
+        <input type="number" id="editItemPrice" name="product_price" step="0.01" required
+        style=
+                "width: 100%;
+                margin-top:10px;
+                padding: 12px 16px;
+                border: none;
+                border-radius: 12px; /* rounded corners */
+                background-color: #f5f5f5; /* subtle background */
+                box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+                font-size: 16px;
+                transition: all 0.3s ease;
+                outline: none;"
+        ><br><br>
 
-        <button type="submit">Save Changes</button>
-        <button type="button" onclick="closeModal('Item')">Cancel</button>
+        <button type="submit"
+        style=
+                "background-color: crimson;
+                color: white;
+                border: none;
+                margin-right: 20px;
+                padding: 10px 18px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1rem;"
+        >Save Changes</button>
+        <button type="button" onclick="closeModal('Item')"
+        style=
+                "background-color: #f00070;
+                color: white;
+                border: none;
+                padding: 10px 50px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1rem;"
+        >Cancel</button>
     </form>
 </div>
+
+<!-- Simple Background Overlay (optional for nice effect) -->
+<div id="overlay" 
+    style="display:none; 
+            position:fixed; 
+            top:0; left:0; 
+            width:100%; 
+            height:100%; 
+            background:black; 
+            opacity:0.5;
+            z-index:999;"
+></div>
 
     <!-- General app.js -->
     <script src="js/app.js" defer></script>
