@@ -63,6 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['Register'])) //Registe
             $mail->Password = $_ENV['SMTP_PASSWORD'];  //Turn on 2 step verification and create app password to this
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = $_ENV['SMTP_PORT'];
+            $mail->SMTPSecure='tls';
             $mail->setFrom($_ENV['SMTP_FROM_EMAIL'], $_ENV['SMTP_FROM_NAME']);  
             $mail->addAddress($email);
             $mail->Subject = 'Velvet Vogue Registration'; //Email Subject
