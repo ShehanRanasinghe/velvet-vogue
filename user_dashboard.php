@@ -30,8 +30,8 @@ $username = $_SESSION['username'];
 $email = $_SESSION['email'];
 
 //Get User Table
-$usersQuery = "SELECT * FROM users";
-$usersResult = $conn->query($usersQuery);
+$sql = "SELECT * FROM user_details WHERE user_id = $user_id";
+$usersResult = $conn->query($sql);
 
 ?>
 
@@ -89,95 +89,203 @@ $usersResult = $conn->query($usersQuery);
 
         <!--DashBoard Section-->
     <section class="main">
-        <h1>Profile</h1>
+    <?php $view = $_GET['view'] ?? 'dashboard';
+    if ($view == 'dashboard') { ?>        
 
-    <!--User Management-->
+
+    <!--Profile Details-->
     <section class="users">
-        <h1>User Management</h1>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th class="password">Password</th>
-                    <th>Role</th>
-                    <th>OTP</th>
-                    <th>OTP Verified</th>
-                    <th>OTP Expiry</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php while ($user = $usersResult->fetch_assoc()): ?>
-                        <tr>
-                            <td><?= $user['id'] ?></td>
-                            <td><?= htmlspecialchars($user['username']) ?></td>
-                            <td><?= htmlspecialchars(substr($user['email'], 0, 13)) . '...' ?></td>
-                            <td><?= htmlspecialchars(substr($user['password'], 0, 5)) . '...' ?></td>
-                            <td><?= htmlspecialchars($user['role']) ?></td> 
-                            <td><?= htmlspecialchars($user['otp']) ?></td>
-                            <td><?= $user['otp_verified'] ? 'Yes' : 'No' ?></td>
-                            <td><?= htmlspecialchars($user['otp_expiry']) ?></td>
-                            <td><?= htmlspecialchars($user['created_at']) ?></td>
-                            <td><?= htmlspecialchars($user['updated_at']) ?></td>
-                            <td class="buttons">
-                                <button class="editBtn" 
-                                        data-type="User"
-                                        data-id="<?= $user['id'] ?>"
-                                        data-username="<?= htmlspecialchars($user['username']) ?>"
-                                        data-email="<?= htmlspecialchars($user['email']) ?>"
-                                        data-role="<?= htmlspecialchars($user['role']) ?>"
-                                >
-                                <div class="editICO">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                                </div>
-                                </button>
+    <h1>Profile</h1>
+    <table>
+        <tr>
+            <th>User ID</th>
+            <th>Full Name</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>Postal Code</th>
+            <th>Country</th>
+        </tr>
 
-                                <button class="deleteBtn" 
-                                        data-type="User"
-                                        data-id="<?= $user['id'] ?>"
-                                >
-                                <div class="dltICO">
-                                <i class="fa-solid fa-trash"></i>
-                                </div>
-                                </button>
-                            </td>
-                        </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
+        <?php while ($user = $usersResult->fetch_assoc()): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($user['user_id']); ?></td>
+                <td><?php echo htmlspecialchars($user['full_name']); ?></td>
+                <td><?php echo htmlspecialchars($user['phone']); ?></td>
+                <td><?php echo nl2br(htmlspecialchars($user['address'])); ?></td>
+                <td><?php echo htmlspecialchars($user['city']); ?></td>
+                <td><?php echo htmlspecialchars($user['postal_code']); ?></td>
+                <td><?php echo htmlspecialchars($user['country']); ?></td>
+                <td class="buttons">
+                    <button class="editUserDetails" 
+                    data-user_id="<?= $user['user_id'] ?>"
+                    data-fullname="<?= htmlspecialchars($user['full_name']) ?>"
+                    data-phone="<?= htmlspecialchars($user['phone']) ?>"
+                    data-address="<?= htmlspecialchars($user['address']) ?>"
+                    data-city="<?= htmlspecialchars($user['city']) ?>"
+                    data-postal="<?= htmlspecialchars($user['postal_code']) ?>"
+                    data-country="<?= htmlspecialchars($user['country']) ?>"
+                    >
+                    <div class="editICO">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    </button>
+                </td>
+            </tr>
+        <?php endwhile; ?>
+    </table>
+    <?php } else ?>
     </section>
  
+<!--User Pop-Up Window-->
+<div id="UserModal" 
+    style=
+            "display:none; 
+            position:fixed; 
+            top:50%; 
+            left:50%; 
+            transform:translate(-50%, -50%); 
+            background:#fff; 
+            padding:20px; 
+            border:1px solid #ccc; 
+            z-index:1000;
+            border-radius: 10px;
+            width:360px;
+            max-height: 90vh;
+            overflow-y: auto;"
+>
+    <h2 style="text-align: center; padding:20px">Edit User</h2>
+    <form class="editForm" id="editUserForm" data-type="UserDetails">
+    <input type="hidden" id="editUserId" name="user_id">
 
+        <label>Full Name: </label><br>
+        <input type="text" id="editFullName" name="full_name" required 
+        style=
+                "width: 100%;
+                margin-top:10px;
+                padding: 12px 16px;
+                border: none;
+                border-radius: 12px; /* rounded corners */
+                background-color: #f5f5f5; /* subtle background */
+                box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+                font-size: 16px;
+                transition: all 0.3s ease;
+                outline: none;"
+        ><br><br>
 
-<!-- Edit User Modal -->
-<div id="UserModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:#fff; padding:20px; border:1px solid #ccc; z-index:1000;">
-    <h2>Edit User</h2>
-    <form class="editForm" id="editUserForm" data-type="User">
-        <input type="hidden" id="editUserId" name="id">
+        <label>Phone:</label><br>
+        <input type="text" id="editPhone" name="phone" required
+        style=
+                "width: 100%;
+                margin-top:10px;
+                padding: 12px 16px;
+                border: none;
+                border-radius: 12px; /* rounded corners */
+                background-color: #f5f5f5; /* subtle background */
+                box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+                font-size: 16px;
+                transition: all 0.3s ease;
+                outline: none;"
+        ><br><br>
 
-        <label>Username:</label><br>
-        <input type="text" id="editUsername" name="username" required><br><br>
+        <label>Address:</label><br>
+        <textarea id="editAddress" name="address" required
+        style=
+                "width: 40%;
+                margin-top:10px;
+                padding: 12px 16px;
+                border: none;
+                border-radius: 12px; /* rounded corners */
+                background-color: #f5f5f5; /* subtle background */
+                box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+                font-size: 16px;
+                transition: all 0.3s ease;
+                outline: none;"
+        >
+        </textarea><br><br>
 
-        <label>Email:</label><br>
-        <input type="email" id="editEmail" name="email" required><br><br>
+        <label>City:</label><br>
+        <input type="text" id="editCity" name="city" required
+        style=
+                "width: 100%;
+                margin-top:10px;
+                padding: 12px 16px;
+                border: none;
+                border-radius: 12px; /* rounded corners */
+                background-color: #f5f5f5; /* subtle background */
+                box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+                font-size: 16px;
+                transition: all 0.3s ease;
+                outline: none;"
+        ><br><br>
 
-        <label>Role:</label><br>
-        <select id="editRole" name="role" required>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-        </select><br><br>
+        <label>Postal Code:</label><br>
+        <input type="text" id="editPostal" name="postal_code" required
+        style=
+                "width: 100%;
+                margin-top:10px;
+                padding: 12px 16px;
+                border: none;
+                border-radius: 12px; /* rounded corners */
+                background-color: #f5f5f5; /* subtle background */
+                box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+                font-size: 16px;
+                transition: all 0.3s ease;
+                outline: none;"
+        ><br><br>
 
-        <button type="submit">Save Changes</button>
-        <button type="button" onclick="closeModal('User')">Cancel</button>
+        <label>Country:</label><br>
+        <input type="text" id="editCountry" name="country" required
+        style=
+                "width: 100%;
+                margin-top:10px;
+                padding: 12px 16px;
+                border: none;
+                border-radius: 12px; /* rounded corners */
+                background-color: #f5f5f5; /* subtle background */
+                box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+                font-size: 16px;
+                transition: all 0.3s ease;
+                outline: none;"
+        ><br><br>
+
+        <button type="submit"
+        style=
+                "background-color: crimson;
+                color: white;
+                border: none;
+                margin-right: 20px;
+                padding: 10px 15px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1rem;"
+        >Save Changes</button>
+        <button type="button" onclick="closeModal('User')"
+        style=
+                "background-color: #f00070;
+                color: white;
+                border: none;
+                padding: 10px 40px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1rem;"
+        >Cancel</button>
     </form>
 </div>
 
 <!-- Simple Background Overlay (optional for nice effect) -->
-<div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; opacity:0.5; z-index:999;"></div>
+<div id="overlay" 
+    style="display:none; 
+            position:fixed; 
+            top:0; left:0; 
+            width:100%; 
+            height:100%; 
+            background:black; 
+            opacity:0.5;
+            z-index:999;"
+></div>
+
+
 
 <!-- General app.js -->
     <script src="js/app.js" defer></script>

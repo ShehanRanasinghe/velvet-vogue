@@ -27,10 +27,28 @@ $query = mysqli_query($conn, "SELECT * FROM user_details WHERE user_id = '$user_
 
 if (mysqli_num_rows($query) > 0) 
 {
-    echo 'COMPLETED'; //If the user_details table user_id found then return this in to cart.js
+    $row = mysqli_fetch_assoc($query);
+    if 
+    (
+        empty($row['full_name']) ||
+        empty($row['phone']) ||
+        empty($row['address']) ||
+        empty($row['city']) ||
+        empty($row['postal_code']) ||
+        empty($row['country'])
+    ) 
+    {
+        echo "INCOMPLETED";  //If the user_details table user_id found then return this in to cart.js
+    }
+
+    else
+    {
+        echo "COMPLETED";  //If the user_details table user_id NOT found then return this in to cart.js
+    }
+
 } 
 else 
 {
-    echo 'INCOMPLETED'; //If the user_details table user_id NOT found then return this in to cart.js
+    echo 'INCOMPLETED';
 }
 ?>

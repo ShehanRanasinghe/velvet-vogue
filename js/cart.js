@@ -9,9 +9,9 @@ function PopUpCheckOut() //The PopUpCheckOut() using in checkout button on cart.
                     {
                         window.open('checkout.php', 'popupWindow', 'width=600,height=600,scrollbars=yes'); //pop-up the checkout.php
                     } 
-                    else if (result === 'NOT_FOUND') 
+                    else if (result === 'INCOMPLETED') 
                     {
-                        alert('Please, First Complete your details in your account for Placed Order.');
+                        alert('Your Profile is INCOMPLETE. Please Update Your Details.');
                         window.location.href = 'user_dashboard.php';
                     }
             }
