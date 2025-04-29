@@ -18,7 +18,7 @@ if ($conn->connect_error)
     $id = $_GET['id'];
 
     // Prepare the DELETE query
-    $query = "DELETE FROM items WHERE id=$id";
+    $query = "DELETE FROM products WHERE id=$id";
 
     // Execute the query
     if (mysqli_query($conn, $query)) {

@@ -50,7 +50,7 @@
         foreach ($products as $product) 
         {
             echo '<div class="product-card">';
-            echo '<img src="' . $product['image'] . '" alt="' . $product['name'] . '">';
+            echo '<img src="' . $product['image'] . '" alt="' . $product['name'] . '" style="width:250px; height:250px; object-fit:cover;">';
             echo '<h3>' . $product['name'] . '</h3>';
             echo '<p>LKR' . number_format($product['price'], 2) . '</p>';
 

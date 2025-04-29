@@ -83,7 +83,7 @@ document.getElementById('editUserForm').addEventListener
     e.preventDefault();
     let formData = new FormData(this);
     fetch
-    ('update_user.php', 
+    ('user_update.php', 
       {
         method: 'POST',
         body: formData
@@ -109,7 +109,7 @@ document.getElementById('editItemForm').addEventListener
     let formData = new FormData(this);
 
     fetch  //Send Form data to the database using Fetch API
-    ('update_product.php', 
+    ('product_update.php', 
       {
         method: 'POST',
         body: formData
@@ -136,7 +136,7 @@ document.querySelectorAll('.deleteBtn').forEach
       {
         if (confirm('Do you want to Delete this user? (can not be undone)')) 
         {
-          fetch('delete_user.php?id=' + this.dataset.id)  //Send Delete Request to the Database with user's ID
+          fetch('user_delete.php?id=' + this.dataset.id)  //Send Delete Request to the Database with user's ID
           .then(response => response.text())
           .then
           (data => 
@@ -160,7 +160,7 @@ document.querySelectorAll('.deleteItemBtn').forEach
       {
         if (confirm('Do you want to Delete this Item? (can not be undone)')) 
         {
-          fetch('delete_product.php?id=' + this.dataset.id)
+          fetch('product_delete.php?id=' + this.dataset.id)
           .then(response => response.text())
           .then
           (data => 

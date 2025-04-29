@@ -200,3 +200,23 @@ button
     align-items: center;
     gap: 5px;
 }
+
+/*+ Add Items*/
+#additemsbtn
+{
+    color: rgb(255, 255, 255);
+    text-align: center;
+    padding: 10px 20px;
+    background: #ff0055;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.together
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 150px;
+}

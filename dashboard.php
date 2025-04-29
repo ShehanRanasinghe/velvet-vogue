@@ -219,7 +219,7 @@ $orderDetailsResult = $conn->query($orderDetailsQuery);
 
     <?php } elseif ($view == 'users') { ?>
 
-    <!--User Management-->
+    <!--Users Management-->
     <section class="users">
         <h1>User Management</h1>
         
@@ -280,8 +280,13 @@ $orderDetailsResult = $conn->query($orderDetailsQuery);
     </section>
  
     <?php } elseif ($view == 'items') { ?>
+
+    <!--Items Management-->        
     <section class="prodcuts">
+    <div class="together">
     <h1>Item Management</h1>
+    <button id="additemsbtn">+ Add Items</button>
+    </div>
 
     <table>
         <thead>
@@ -315,7 +320,7 @@ $orderDetailsResult = $conn->query($orderDetailsQuery);
                                 </div>
                                 </button>
 
-                                <button class="deleteBtn" 
+                                <button class="deleteItemBtn" 
                                         data-type="Item"
                                         data-id="<?= $item['id'] ?>"
                                 >
@@ -330,6 +335,8 @@ $orderDetailsResult = $conn->query($orderDetailsQuery);
     </table>
     </section>
     <?php } elseif ($view == 'orders') {?>
+
+    <!--Order Details-->
     <section class="orders">
     <h1>Order Details</h1>
 
@@ -527,6 +534,94 @@ style=
     </form>
 </div>
 
+<!--Add Item Pop-Up Window-->
+<div id="addItemModal" 
+style="display:none; 
+        position:fixed; 
+        top:50%; 
+        left:50%; 
+        transform:translate(-50%, -50%); 
+        background:#fff; 
+        padding:20px; 
+        border:1px solid #ccc; 
+        z-index:1000;
+        border-radius: 10px;
+        width:360px;
+        height:450px;"
+>
+    <h2 style="text-align: center; padding:20px">Add New Item</h3>
+    <form id="addItemForm">
+
+      <label>Item Name:</label><br>
+      <input type="text" name="item_name" required
+      style=
+            "width: 100%;
+            margin-top:10px;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 12px; /* rounded corners */
+            background-color: #f5f5f5; /* subtle background */
+            box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;"
+      ><br><br>
+      
+      <label>Price:</label><br>
+      <input type="number" name="price" required
+      style=
+            "width: 100%;
+            margin-top:10px;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 12px; /* rounded corners */
+            background-color: #f5f5f5; /* subtle background */
+            box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;"
+      ><br><br>
+
+      <label>Image URL:</label><br>
+      <input type="text" name="image_url" placeholder="Please enter image url"
+      style=
+            "width: 100%;
+            margin-top:10px;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 12px; /* rounded corners */
+            background-color: #f5f5f5; /* subtle background */
+            box-shadow: inset 0 0 0 1px #e0e0e0; /* thin internal border */
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;"
+      ><br><br>
+
+      <button type="submit"
+      style=
+            "background-color: crimson;
+            color: white;
+            border: none;
+            margin-right: 20px;
+            padding: 10px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;"
+      >Add Item</button>
+      <button type="button" onclick="closeAddItem()"
+      style=
+            "background-color: #f00070;
+            color: white;
+            border: none;
+            padding: 10px 45px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;"
+      >Cancel</button>
+    </form>
+  </div>
+</div>
+
 <!-- Simple Background Overlay (optional for nice effect) -->
 <div id="overlay" 
     style="display:none; 
@@ -543,6 +638,8 @@ style=
     <script src="js/app.js" defer></script>
     <!-- Dashboard JS file -->
     <script src="js/dashboard.js"></script>
+    <!-- Add Items JS file -->
+    <script src="js/additems.js"></script>    
     <!-- Security.js for disabling right-click -->
     <script src="js/security.js" defer></script>
 </body>
